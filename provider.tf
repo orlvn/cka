@@ -5,16 +5,16 @@ terraform {
     }
   }
   backend "s3" {
-    bucket  = "hb-sb-tf-remote-state"
+    bucket  = "sb-tf-remote-state"
     key     = "norlov/cka"
-    region  = "eu-west-1"
+    region  = "eu-central-1"
     profile = "sandbox"
-    dynamodb_table = "tf-state-lock"
+    dynamodb_table = "terraform-locks"
   }
 }
 
 provider "aws" {
-  region = "eu-west-1"
+  region = "eu-central-1"
   profile = "sandbox"
   default_tags {
     tags = {
@@ -25,7 +25,7 @@ provider "aws" {
 
 provider "aws" {
   alias = "non-prod"
-  region = "eu-west-1"
+  region = "eu-central-1"
   profile = "terraform-dev"
   default_tags {
     tags = {
