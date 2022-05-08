@@ -4,8 +4,10 @@ locals {
     "82.214.91.66/32",
   ]
   cka_cp_subnet_id        = "subnet-06b024af0b4242aa8"
-  instance_state = "stop-instances"
-  #instance_state = "start-instances"
+  curr_state = "0: [${aws_instance.cka_cp[0].instance_state}] | 1: [${aws_instance.cka_cp[1].instance_state}] | 2: [${aws_instance.cka_cp[2].instance_state}]"
+
+  #instance_state = "stop-instances"
+  instance_state = "start-instances"
 }
 
 data "aws_ami" "ubuntu" {
@@ -86,6 +88,11 @@ resource "aws_security_group" "cka_cp" {
     protocol    = "-1"
     security_groups = [ aws_security_group.cka_bastion.id ]
   }
+}
+
+output "cp_instances_state" {
+  description = "Control plane instance state"
+  value       = local.curr_state
 }
 
 ### Helper
