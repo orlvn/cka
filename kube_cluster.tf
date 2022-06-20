@@ -10,9 +10,6 @@ locals {
   curr_state = "0: [${aws_instance.cka_cp[0].instance_state}] | 1: [${aws_instance.cka_worker[0].instance_state}] | 2: [${aws_instance.cka_worker[1].instance_state}]"
   #instance_state = "stop-instances"
   instance_state = "start-instances"
-
-  #cp_user_data = base64encode(templatefile("${path.module}/cp_user_data.bash", {}))
-  #worker_user_data = base64encode(templatefile("${path.module}/worker_user_data.bash", {}))
 }
 
 data "aws_ami" "ubuntu" {
@@ -77,7 +74,7 @@ resource "aws_instance" "cka_bastion" {
 resource "aws_instance" "cka_cp" {
   count = 1
     ami             = data.aws_ami.ubuntu.id
-    instance_type   = "t3.micro"
+    instance_type   = "t3.small"
     user_data       = base64encode(templatefile("${path.module}/cp_user_data.bash", {}))
     key_name        = aws_key_pair.norlov.id
     vpc_security_group_ids = [ "${aws_security_group.cka_cp.id}" ]
@@ -92,7 +89,7 @@ resource "aws_instance" "cka_cp" {
 resource "aws_instance" "cka_worker" {
   count = 2
     ami             = data.aws_ami.ubuntu.id
-    instance_type   = "t3.micro"
+    instance_type   = "t3.small"
     user_data       = base64encode(templatefile("${path.module}/worker_user_data.bash", {worker_index = count.index+1}))
     key_name        = aws_key_pair.norlov.id
     vpc_security_group_ids = [ "${aws_security_group.cka_cp.id}" ]
