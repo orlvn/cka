@@ -17,7 +17,8 @@ cat << EOB > /etc/modules-load.d/containerd.conf
 overlay
 br_netfilter
 EOB
-modprobe overlay br_netfilter
+modprobe overlay
+modprobe br_netfilter
 
 # Sysctl setup
 cat <<EOB > /etc/sysctl.d/99-kubernetes-cri.conf
