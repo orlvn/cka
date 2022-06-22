@@ -1,20 +1,20 @@
 terraform {
   required_providers {
-    aws =  {
+    aws = {
       version = "~> 4.0"
     }
   }
   backend "s3" {
-    bucket  = "sb-tf-remote-state"
-    key     = "norlov/cka"
-    region  = "eu-central-1"
-    profile = "sandbox"
+    bucket         = "sb-tf-remote-state"
+    key            = "norlov/cka"
+    region         = "eu-central-1"
+    profile        = "sandbox"
     dynamodb_table = "terraform-locks"
   }
 }
 
 provider "aws" {
-  region = "eu-central-1"
+  region  = "eu-central-1"
   profile = "sandbox"
   default_tags {
     tags = {
@@ -24,12 +24,12 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias = "non-prod"
-  region = "eu-central-1"
+  alias   = "non-prod"
+  region  = "eu-central-1"
   profile = "terraform-dev"
   default_tags {
     tags = {
       Owner = "norlov"
     }
   }
-} 
+}

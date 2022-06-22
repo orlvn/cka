@@ -51,4 +51,12 @@ apt-mark hold kubelet kubeadm kubectl
 # Start cluster
 kubeadm init --pod-network-cidr 192.168.0.0/16 --kubernetes-version 1.23.0
 
+# Setup kube config for ubuntu user
+mkdir -p /home/ubuntu/.kube
+cp /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+chown -R ubuntu:ubuntu /home/ubuntu/.kube
+
+# Install networking
+sudo -u ubuntu  kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
 echo y > /root/y
