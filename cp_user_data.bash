@@ -57,6 +57,10 @@ cp /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
 chown -R ubuntu:ubuntu /home/ubuntu/.kube
 
 # Install networking
-sudo -u ubuntu  kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+sudo -i -u ubuntu kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
+# Generate a kubeadm bootstrap token
+kubeadm token create nikola.bootstraptoken01
+
 
 echo y > /root/y

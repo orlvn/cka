@@ -48,4 +48,7 @@ apt update
 apt install -y kubelet=1.23.0-00 kubeadm=1.23.0-00 kubectl=1.23.0-00
 apt-mark hold kubelet kubeadm kubectl
 
+# Join cluster
+kubeadm join 172.31.10.100:6443 --token nikola.bootstraptoken01 --discovery-token-unsafe-skip-ca-verification
+
 echo y > /root/y
