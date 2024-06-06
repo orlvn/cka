@@ -8,14 +8,14 @@ terraform {
     bucket         = "sb-tf-remote-state"
     key            = "norlov/cka"
     region         = "eu-central-1"
-    profile        = "sandbox"
-    dynamodb_table = "terraform-locks"
+    profile        = "terraform-sb"
+    #dynamodb_table = "terraform-locks"
   }
 }
 
 provider "aws" {
   region  = "eu-central-1"
-  profile = "sandbox"
+  profile = "terraform-sb"
   default_tags {
     tags = {
       Owner = "norlov"

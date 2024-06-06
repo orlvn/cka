@@ -40,12 +40,17 @@ swapoff -a
 
 # Install Kubernetes components
 apt install -y apt-transport-https curl
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-cat << EOB > /etc/apt/sources.list.d/kubernetes.list
-deb https://apt.kubernetes.io/ kubernetes-xenial main
-EOB
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.27/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.27/deb/ /
+EOF
+#curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+#cat << EOB > /etc/apt/sources.list.d/kubernetes.list
+#deb https://apt.kubernetes.io/ kubernetes-xenial main
+#EOB
 apt update
-apt install -y kubelet=1.23.0-00 kubeadm=1.23.0-00 kubectl=1.23.0-00
+#apt install -y kubelet=1.23.0-00 kubeadm=1.23.0-00 kubectl=1.23.0-00
+apt install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
 # Join cluster

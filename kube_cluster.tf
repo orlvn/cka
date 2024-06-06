@@ -2,14 +2,15 @@ locals {
   cka_bastion_subnet_id = "subnet-8534f8c8"
   cka_bastion_cidr_blocks = [
     "82.214.91.66/32",
+    "34.199.203.217/32"
   ]
   cka_cp_subnet_id = "subnet-06b024af0b4242aa8"
   worker_ip        = ["172.31.10.101", "172.31.10.102"]
   cp_ip            = "172.31.10.100"
 
-  curr_state = "0: [${aws_instance.cka_cp[0].instance_state}] | 1: [${aws_instance.cka_worker[0].instance_state}] | 2: [${aws_instance.cka_worker[1].instance_state}]"
+  #curr_state = "0: [${aws_instance.cka_cp[0].instance_state}] | 1: [${aws_instance.cka_worker[0].instance_state}] | 2: [${aws_instance.cka_worker[1].instance_state}]"
   #instance_state = "stop-instances"
-  instance_state = "start-instances"
+  #instance_state = "start-instances"
 }
 
 data "aws_ami" "ubuntu" {
@@ -17,7 +18,7 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 
   filter {
@@ -127,10 +128,10 @@ output "cka_bastion_eip" {
   value       = aws_eip.cka_bastion.public_ip
 }
 
-output "cp_instances_state" {
-  description = "Control plane instance state"
-  value       = local.curr_state
-}
+#output "cp_instances_state" {
+#  description = "Control plane instance state"
+#  value       = local.curr_state
+#}
 
 output "cp_private_ip" {
   description = "Control Plane private IP"
@@ -142,12 +143,17 @@ output "worker_private_ips" {
   value       = aws_instance.cka_worker[*].private_ip
 }
 
+output "start_instances" {
+  description = "Use this command to start instances"
+  value       = "terraform apply -var=\"instance_state=start-instances\""
+}
+
 ### Helper to stop or start the EC2 instances
 resource "null_resource" "this" {
   triggers = {
     always_run = "${timestamp()}"
   }
   provisioner "local-exec" {
-    command = "aws --profile sandbox ec2 ${local.instance_state} --instance-ids ${aws_instance.cka_bastion.id} ${aws_instance.cka_cp[0].id} ${aws_instance.cka_worker[0].id} ${aws_instance.cka_worker[1].id}"
+    command = "aws --profile terraform-sb --region eu-central-1 ec2 ${var.instance_state} --instance-ids ${aws_instance.cka_bastion.id} ${aws_instance.cka_cp[0].id} ${aws_instance.cka_worker[0].id} ${aws_instance.cka_worker[1].id}"
   }
 }
